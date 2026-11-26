@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hilltop Cafe — Coffee, Views & Slow Mornings | Demo by Nexus Transformations</title>
+<meta name="description" content="Demo website for Hilltop Cafe by Nexus Transformations. Coffee, Views & Slow Mornings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#101010;--orange:#d5360c;--cream:#f7efdf;--ivory:#fffaf0;--muted:#6b6259}
+html{scroll-behavior:auto}
+body{font-family:'Inter',sans-serif;background:var(--ivory);color:var(--ink);overflow-x:hidden;line-height:1.6}
+h1,h2,h3{font-family:'Fraunces',serif;line-height:1.05}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block;object-fit:cover}
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--orange);width:0%;z-index:9999}
+.demo-banner{background:var(--ink);color:var(--cream);text-align:center;padding:10px 16px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;position:relative;z-index:1001}
+.demo-banner b{color:#ff8a5c}
+header{position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:18px 5%;transition:.3s;background:rgba(247,239,223,.7)}
+header.scrolled{backdrop-filter:blur(16px);background:rgba(255,250,240,.88);box-shadow:0 10px 30px rgba(0,0,0,.08);padding:12px 5%}
+.logo{font-family:'Fraunces',serif;font-size:26px;font-weight:700}.logo span{color:var(--orange)}
+nav{display:flex;gap:28px;font-weight:600;font-size:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:999px;font-weight:700;font-size:14px;border:1px solid var(--ink);transition:.25s}
+.btn-dark{background:var(--ink);color:#fff}.btn-orange{background:var(--orange);color:#fff;border-color:var(--orange)}.btn-light{background:var(--cream);color:var(--ink)}
+.btn:hover{transform:translateY(-2px)}
+.hero{position:relative;min-height:92vh;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;padding:40px 5% 70px;background:radial-gradient(800px 500px at 20% 20%,#ffe9d6,transparent),var(--cream);overflow:hidden}
+#webgl{position:absolute;inset:0;width:100%;height:100%;opacity:.9;pointer-events:none}
+.hero-content{position:relative;z-index:2}
+.eyebrow{letter-spacing:.18em;text-transform:uppercase;font-size:12px;font-weight:700;color:var(--orange);margin-bottom:16px}
+.hero h1{font-size:clamp(48px,7vw,84px);margin-bottom:18px}.hero h1 em{color:var(--orange);font-style:normal}
+.hero p{font-size:18px;color:#3a332c;max-width:540px;margin-bottom:28px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.stats{display:flex;gap:28px}.stats b{font-family:'Fraunces',serif;font-size:26px;display:block}.stats span{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hero-img{position:relative;z-index:2;border-radius:28px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.2);transform:rotate(2deg)}
+.hero-img img{height:560px;width:100%}
+.badge{position:absolute;bottom:18px;left:18px;background:#fff;padding:14px 18px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+.marquee{background:var(--ink);color:var(--cream);overflow:hidden;padding:16px 0;white-space:nowrap}
+.marquee-track{display:inline-flex;gap:40px;animation:m 22s linear infinite;font-family:'Fraunces',serif;font-size:20px}
+@keyframes m{to{transform:translateX(-50%)}}
+section{padding:90px 5%}
+.section-head{max-width:720px;margin-bottom:40px}.section-head h2{font-size:clamp(36px,5vw,56px);margin:10px 0}.section-head p{color:var(--muted)}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.about-imgs{display:grid;grid-template-columns:1fr 1fr;gap:16px}.about-imgs img{border-radius:20px;height:280px;width:100%}.about-imgs img:first-child{height:380px;grid-row:span 2}
+.statement{font-family:'Fraunces',serif;font-size:clamp(28px,4vw,48px);line-height:1.2;text-align:center;max-width:900px;margin:0 auto}
+.statement span{opacity:.18}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.menu-card{background:#fff;border:1px solid #eee2cc;border-radius:22px;overflow:hidden}.menu-card img{height:210px;width:100%}.menu-card div{padding:20px}.price{color:var(--orange);font-weight:800;font-size:18px}
+.gallery-wrap{overflow:hidden;background:var(--ink);color:var(--cream);border-radius:28px;padding:30px 0}
+.gallery-track{display:flex;gap:18px;padding:0 20px;width:max-content}.gallery-track img{width:340px;height:260px;border-radius:18px;flex-shrink:0}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;perspective:1000px}
+.tilt{background:var(--cream);border:1px solid #e8dcc3;border-radius:24px;padding:28px;transition:transform .15s ease;transform-style:preserve-3d}
+.tilt h3{font-size:24px;margin:12px 0 8px}.icon{font-size:32px}
+.testis{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.testi{background:#fff;border-radius:20px;padding:26px;border:1px solid #eee}
+.visit{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;background:var(--cream);border-radius:28px;padding:40px}
+.visit img{border-radius:20px;height:100%;min-height:320px;width:100%}
+.cta{position:relative;padding:110px 5%;text-align:center;color:#fff;overflow:hidden}
+.cta-bg{position:absolute;inset:-20% 0;background:url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1600&auto=format&fit=crop') center/cover;z-index:-1}
+.cta::after{content:"";position:absolute;inset:0;background:rgba(16,16,16,.65);z-index:-1}
+.cta h2{font-size:clamp(36px,6vw,64px);margin-bottom:16px}
+footer{background:var(--ink);color:#ddd;padding:50px 5% 30px}
+footer a{color:#fff}
+.disclaimer{margin-top:30px;padding:18px;border:1px dashed #555;border-radius:12px;font-size:13px;color:#bbb;text-align:center}
+.whatsapp{position:fixed;right:18px;bottom:18px;z-index:999;background:#25D366;color:#fff;padding:14px 18px;border-radius:999px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.25);display:flex;gap:8px;align-items:center}
+.reveal{opacity:0;transform:translateY(36px)}
+@media(max-width:900px){nav{display:none}.hero,.about,.visit{grid-template-columns:1fr}.menu-grid,.cards,.testis{grid-template-columns:1fr}.hero-img img{height:380px}section{padding:60px 5%}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="demo-banner">✦ <b>DEMO WEBSITE</b> by Nexus Transformations — Sample design only &nbsp;|&nbsp; Hilltop Cafe</div>
+<header id="header"><a href="#" class="logo">Hilltop<span>.</span> Cafe</a><nav><a href="#about">Story</a><a href="#menu">Menu</a><a href="#gallery">Gallery</a><a href="#visit">Visit</a></nav><a class="btn btn-dark" href="tel:+919999999999">Call Now</a></header>
+
+<section class="hero">
+<canvas id="webgl"></canvas>
+<div class="hero-content">
+<p class="eyebrow">Hill Cafe • Est. for Slow Days</p>
+<h1>Coffee, Views &amp;<br><em>Slow Mornings</em></h1>
+<p>Perched above the valley, Hilltop Cafe serves hand-brewed coffee, fresh bakes and mountain views that make you stay a little longer.</p>
+<div class="hero-ctas"><a class="btn btn-orange" href="https://wa.me/919999999999" target="_blank">💬 WhatsApp Us</a><a class="btn btn-dark" href="tel:+919999999999">📞 Call Cafe</a><a class="btn btn-light" href="#menu">See Menu ↓</a></div>
+<div class="stats"><div><b>4.9★</b><span>Sample Rating</span></div><div><b>120+</b><span>Happy Guests*</span></div><div><b>7 AM</b><span>Opens Daily</span></div></div>
+</div>
+<div class="hero-img"><img class="hero-parallax" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1200&auto=format&fit=crop" alt="Hilltop Cafe interior"><div class="badge"><b>☀️ Sunrise Special</b><br><small>Fresh brew + valley view, every morning</small></div></div>
+</section>
+
+<div class="marquee"><div class="marquee-track"><span>Fresh Coffee ✦ Mountain Views ✦ Homemade Bakes ✦ Slow Mornings ✦ Sunset Chai ✦ Fresh Coffee ✦ Mountain Views ✦ Homemade Bakes ✦ Slow Mornings ✦ Sunset Chai ✦&nbsp;</span><span>Fresh Coffee ✦ Mountain Views ✦ Homemade Bakes ✦ Slow Mornings ✦ Sunset Chai ✦ Fresh Coffee ✦ Mountain Views ✦ Homemade Bakes ✦ Slow Mornings ✦ Sunset Chai ✦&nbsp;</span></div></div>
+
+<section id="about"><div class="about">
+<div class="about-imgs"><img class="parallax-img" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=900&auto=format&fit=crop" alt="Coffee"><img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?q=80&w=900&auto=format&fit=crop" alt="Cafe table"><img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=900&auto=format&fit=crop" alt="Cafe vibes"></div>
+<div class="reveal"><p class="eyebrow">Our Story</p><h2 style="font-size:48px;margin-bottom:16px">A little cafe,<br>with a big view.</h2><p style="color:#555;margin-bottom:16px">Hilltop started as a place for travellers to pause — and locals to gather. No rush, no noise. Just good coffee, warm food, books, music and the hills doing the rest.</p><p style="color:#555">This demo shows how your cafe's story, photos and menu can become a website that brings more walk-ins, calls and WhatsApp enquiries — directly, without middlemen.</p><br><a href="#visit" class="btn btn-orange">Plan Your Visit →</a></div>
+</div></section>
+
+<section><p class="statement" id="statement">Good coffee slows time. Good views heal it. At Hilltop, you get both — in every single cup.</p></section>
+
+<section id="menu" style="background:#fff"><div class="section-head reveal"><p class="eyebrow">Menu Highlights — Sample Prices</p><h2>Loved by every table</h2><p>Sample menu for demo only. Final site will use your real menu &amp; prices.</p></div>
+<div class="menu-grid">
+<article class="menu-card reveal"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=800&auto=format&fit=crop" alt=""><div><h3>Hilltop Cappuccino</h3><p>Double shot, velvety foam, cocoa dust.</p><span class="price">₹180 *sample</span></div></article>
+<article class="menu-card reveal"><img src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?q=80&w=800&auto=format&fit=crop" alt=""><div><h3>Masala Maggi Bowl</h3><p>Mountain-style, veggies &amp; secret masala.</p><span class="price">₹150 *sample</span></div></article>
+<article class="menu-card reveal"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=800&auto=format&fit=crop" alt=""><div><h3>Pour-Over Brew</h3><p>Single-origin beans, brewed slow.</p><span class="price">₹220 *sample</span></div></article>
+<article class="menu-card reveal"><img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=800&auto=format&fit=crop" alt=""><div><h3>Grilled Veg Sandwich</h3><p>Sourdough, cheese, hill herbs.</p><span class="price">₹190 *sample</span></div></article>
+<article class="menu-card reveal"><img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?q=80&w=800&auto=format&fit=crop" alt=""><div><h3>Banana Walnut Cake</h3><p>Baked fresh every morning.</p><span class="price">₹120 *sample</span></div></article>
+<article class="menu-card reveal"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=800&auto=format&fit=crop" alt=""><div><h3>Sunset Ginger Chai</h3><p>Strong, spiced, perfect at golden hour.</p><span class="price">₹90 *sample</span></div></article>
+</div></section>
+
+<section id="gallery"><div class="section-head reveal"><p class="eyebrow">Gallery</p><h2>Moments at Hilltop</h2></div><div class="gallery-wrap"><div class="gallery-track" id="galleryTrack">
+<img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=800&auto=format&fit=crop" alt=""><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=800&auto=format&fit=crop" alt=""><img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=800&auto=format&fit=crop" alt=""><img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?q=80&w=800&auto=format&fit=crop" alt=""><img src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?q=80&w=800&auto=format&fit=crop" alt=""><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=800&auto=format&fit=crop" alt="">
+</div></div></section>
+
+<section><div class="section-head reveal"><p class="eyebrow">Why Visit</p><h2>More than a cafe</h2></div><div class="cards">
+<div class="tilt reveal"><div class="icon">🏔️</div><h3>Valley-View Seating</h3><p>Open deck, sunrise to sunset. Best seat in the hills for your coffee.</p></div>
+<div class="tilt reveal"><div class="icon">☕</div><h3>Freshly Brewed</h3><p>Beans ground per cup, bakes made in-house daily. Taste the difference.</p></div>
+<div class="tilt reveal"><div class="icon">📶</div><h3>Work-Friendly</h3><p>Wi-Fi, charging points &amp; quiet corners — your mountain office.</p></div>
+</div></section>
+
+<section style="background:#fff"><div class="section-head reveal"><p class="eyebrow">Testimonials — Sample</p><h2>Guests say it best*</h2></div><div class="testis">
+<div class="testi reveal"><b>★★★★★</b><p>"Best coffee with the best view. We came for 20 minutes, stayed for 3 hours."</p><br><b>— Sample Guest</b></div>
+<div class="testi reveal"><b>★★★★★</b><p>"Cosy, warm and the banana cake is a must-try. Perfect slow morning spot."</p><br><b>— Sample Guest</b></div>
+<div class="testi reveal"><b>★★★★★</b><p>"Booked via WhatsApp in seconds. Staff is lovely, sunset chai is unforgettable."</p><br><b>— Sample Guest</b></div>
+</div><p style="font-size:12px;color:#999;margin-top:12px">*Sample testimonials for demo layout only.</p></section>
+
+<section id="visit"><div class="visit reveal"><div><p class="eyebrow">Visit Us</p><h2 style="font-size:42px;margin-bottom:16px">Find your way to slow</h2><p><b>📍 Location:</b> Hill Road, Near View Point (Sample Address)</p><p><b>🕒 Hours:</b> Mon–Sun • 7:00 AM – 9:00 PM</p><p><b>📞 Phone:</b> +91 99999 99999 (Demo)</p><p><b>✉️</b> hello@hilltopcafe.example</p><br><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-orange" href="https://wa.me/919999999999">WhatsApp Directions</a><a class="btn btn-dark" href="tel:+919999999999">Call Now</a></div></div><img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?q=80&w=1000&auto=format&fit=crop" alt="Visit Hilltop"></div></section>
+
+<section class="cta"><div class="cta-bg" id="ctaBg"></div><div class="reveal"><h2>Your next coffee<br>deserves this view.</h2><p style="max-width:520px;margin:0 auto 24px;opacity:.9">Message us on WhatsApp, reserve a window seat, or just walk in — the kettle is already on.</p><a class="btn btn-orange" href="https://wa.me/919999999999" style="font-size:16px;padding:16px 32px">Start on WhatsApp →</a></div></section>
+
+<footer><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px"><div><div class="logo" style="color:#fff">Hilltop<span>.</span> Cafe</div><p style="max-width:320px;color:#aaa;margin-top:10px">Coffee, Views &amp; Slow Mornings. A demo concept by Nexus Transformations.</p></div><div><b>Explore</b><br><br><a href="#about">Story</a><br><a href="#menu">Menu</a><br><a href="#gallery">Gallery</a></div><div><b>Contact (Demo)</b><br><br>+91 99999 99999<br>Main Hill Road (Sample)</div></div><div class="disclaimer">DEMO WEBSITE by Nexus Transformations — sample design only. Final website will use your cafe's own photos, menu &amp; prices.<br>Built by Nexus Transformations • Websites for cafes, restaurants &amp; stays across India</div><p style="text-align:center;margin-top:20px;font-size:12px;color:#777">© 2026 Hilltop Cafe (Demo) • Nexus Transformations</p></footer>
+
+<a class="whatsapp" href="https://wa.me/919999999999?text=Hi%20Hilltop%20Cafe%2C%20I%20saw%20your%20demo%20website" target="_blank">💬 WhatsApp <span style="font-size:11px;opacity:.8">(Demo)</span></a>
+
+<script>
+// Lenis smooth scroll
+let lenis = null;
+try {
+  if (typeof Lenis !== 'undefined') {
+    lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    if (typeof ScrollTrigger !== 'undefined' && lenis) {
+      lenis.on('scroll', function(){ if(window.ScrollTrigger) ScrollTrigger.update(); });
+    }
+  }
+} catch(e){ console.warn('Lenis fallback', e); }
+
+// Header + progress
+var header = document.getElementById('header');
+var progress = document.getElementById('progress');
+window.addEventListener('scroll', function(){
+  if (window.scrollY > 40) header.classList.add('scrolled'); else header.classList.remove('scrolled');
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  progress.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+});
+
+// Three.js Web3D - floating beans / particles
+(function(){
+  try {
+    if (typeof THREE === 'undefined') return;
+    var canvas = document.getElementById('webgl');
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+    camera.position.z = 8;
+    var group = new THREE.Group(); scene.add(group);
+    var geo = new THREE.SphereGeometry(0.32, 24, 24);
+    var mat1 = new THREE.MeshStandardMaterial({ color: 0xd5360c, roughness: 0.35, metalness: 0.1 });
+    var mat2 = new THREE.MeshStandardMaterial({ color: 0x8a5a2b, roughness: 0.5 });
+    var mat3 = new THREE.MeshStandardMaterial({ color: 0xf7efdf, roughness: 0.4 });
+    var mats = [mat1, mat2, mat3];
+    var beans = [];
+    for (var i = 0; i < 28; i++) {
+      var m = new THREE.Mesh(geo, mats[i % 3]);
+      m.position.set((Math.random()-0.5)*12, (Math.random()-0.5)*7, (Math.random()-0.5)*4);
+      m.scale.set(1, 0.72, 1.25);
+      m.rotation.set(Math.random()*3, Math.random()*3, Math.random()*3);
+      group.add(m); beans.push(m);
+    }
+    // particles
+    var pGeo = new THREE.BufferGeometry();
+    var count = 220; var pos = new Float32Array(count*3);
+    for (var j = 0; j < count*3; j++) pos[j] = (Math.random()-0.5)*14;
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    var points = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0xd5360c, size: 0.06, transparent: true, opacity: 0.7 }));
+    scene.add(points);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+    var light = new THREE.DirectionalLight(0xffffff, 1.2); light.position.set(3,5,4); scene.add(light);
+    var mx = 0, my = 0;
+    window.addEventListener('mousemove', function(e){ mx = (e.clientX/window.innerWidth - 0.5); my = (e.clientY/window.innerHeight - 0.5); });
+    function resize(){
+      var w = canvas.parentElement.clientWidth, h = canvas.parentElement.clientHeight;
+      renderer.setSize(w, h, false); camera.aspect = w/h; camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', resize); resize();
+    var clock = new THREE.Clock();
+    function animate(){
+      requestAnimationFrame(animate);
+      var t = clock.getElapsedTime();
+      group.rotation.y = t*0.08 + mx*0.6; group.rotation.x = my*0.4;
+      points.rotation.y = t*0.03;
+      beans.forEach(function(b, idx){ b.position.y += Math.sin(t + idx)*0.0015; b.rotation.x += 0.003; b.rotation.y += 0.004; });
+      renderer.render(scene, camera);
+    }
+    animate();
+  } catch(e){ console.warn('WebGL degraded gracefully', e); var c=document.getElementById('webgl'); if(c) c.style.display='none'; }
+})();
+
+// GSAP animations
+try {
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.utils.toArray('.reveal').forEach(function(el){
+      gsap.to(el, { opacity:1, y:0, duration:0.9, ease:'power3.out', scrollTrigger:{ trigger: el, start:'top 85%' } });
+    });
+    gsap.to('.hero-parallax', { yPercent: 12, ease:'none', scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true } });
+    gsap.to('#ctaBg', { yPercent: 18, ease:'none', scrollTrigger:{ trigger:'.cta', start:'top bottom', end:'bottom top', scrub:true } });
+    gsap.to('#galleryTrack', { x: -420, ease:'none', scrollTrigger:{ trigger:'#gallery', start:'top 70%', end:'bottom 30%', scrub:1 } });
+    // word-by-word statement
+    var st = document.getElementById('statement');
+    if (st) {
+      var words = st.textContent.trim().split(/\s+/);
+      st.innerHTML = words.map(function(w){ return '<span>'+w+'</span>'; }).join(' ');
+      gsap.to('#statement span', { opacity:1, stagger:0.08, duration:0.4, scrollTrigger:{ trigger: st, start:'top 80%', end:'bottom 60%', scrub:true } });
+    }
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.style.opacity=1; el.style.transform='none'; });
+    var st2 = document.getElementById('statement'); if(st2) st2.style.opacity=1;
+  }
+} catch(e){ console.warn('GSAP fallback', e); document.querySelectorAll('.reveal').forEach(function(el){ el.style.opacity=1; }); }
+
+// 3D tilt cards
+document.querySelectorAll('.tilt').forEach(function(card){
+  card.addEventListener('mousemove', function(e){
+    var r = card.getBoundingClientRect();
+    var x = (e.clientX - r.left)/r.width - 0.5;
+    var y = (e.clientY - r.top)/r.height - 0.5;
+    card.style.transform = 'rotateY('+(x*14)+'deg) rotateX('+(-y*14)+'deg) translateY(-4px)';
+  });
+  card.addEventListener('mouseleave', function(){ card.style.transform=''; });
+});
+</script>
+</body>
+</html>
